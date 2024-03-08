@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="question.css"/>
+    <title>Questionnaire</title>
+    
+    
+    <link rel="stylesheet" type="text/css" href="">
+  </head>
+  <body id="questions-bckg">
+    <form method="" action="#" id="question_form" onsubmit="return user_input()">
+      <fieldset>
+        <legend id="questionTitle">QUESTION # <span id="questionNumber">1</span>
+        </legend>
+        <p id="questionBody">
+        <h2 id="questionText">When I make decisions:</h2>
+        </p>
+        <div id="optionsContainer">
+          <!-- Options will be dynamically added here -->
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <input type="submit" id="nextButton" value="Next" disabled />
+      <!-- Submit fbutton form -->
+      <input type="submit" id="submitButton" value="Submit" onclick="submitForm()" />
+    </form>
+    <!-- Buttons to jump to specific questions -->
+    <div id="questionNavigation">
+      <!-- Buttons will be dynamically added here -->
+    </div>
+    <footer id="footer">
+      <p >Made By Seemant & Manik</p>
+    </footer>
+    <script>
+      // Initialize question index
+      var currentQuestion = 1;
+      // Questions and answers data
+      var questionsData = [{
+        question: "When I make decisions:",
+        options: ["a. I do it quickly and go with the first impressions.", "b. I think about it, consider the options and then decide.", "c. I listen to my feelings and consider how my decisions will affect others.", "d. I take it seriously and always try to make the right decision."]
+      }, {
+        question: "The best way for others to show me they care about me is to:",
+        options: ["a. Do fun things with me.", "b. Give me space to be myself.", "c. Spend time with me doing whatever.", "d. Do what I want to do; not let me down or go back on their word."]
+      }, {
+        question: "When I’m with my friends, I like to provide:",
+        options: ["a. The excitement; the fun; the jokes.", "b. Questions; answers; a logical way of looking at things.", "c. Concern for others; a lot of caring.", "d. The planning; a sense of security; a good standard."]
+      }, {
+        question: "I like to:",
+        options: ["a. Act on a moment’s notice; do risky things.", "b. Provide answers or give thought to people’s questions.", "c. Help maintain a sense of harmony and togetherness.", "d. Be responsible, dependable, and helpful to others."]
+      }, {
+        question: "One thing I am really good at is:",
+        options: ["a. Acting courageously.", "b. Thinking.", "c. Being sensitive.", "d. Organizing."]
+      }, {
+        question: "Friends who know me best would say that I am:",
+        options: ["a. Competitive.", "b. Reserved, thoughtful.", "c. Emotional, friendly.", "d. Neat, prepared."]
+      }, {
+        question: "My basic approach to life is:",
+        options: ["a. To take one day at a time and have fun.", "b. To figure out what life is all about.", "c. To help others and be happy and succeed.", "d. To plan for the future and make it as good as possible."]
+      }, {
+        question: "When I am feeling discouraged or “down in the dumps”:",
+        options: ["a. I often become rude, mad, or sometimes even mean.", "b. I withdraw, don’t talk very much, and try to think my way out of the problem.", "c. I feel emotional, am sad, and usually like to talk it over with someone close to me.", "d. I try to figure out what’s causing the problem and fix it."]
+      }, {
+        question: "I feel good about myself when:",
+        options: ["a. I can do things that are difficult.", "b. I can solve problems or figure things out.", "c. I can help other people.", "d. I am appreciated or rewarded for things I do."]
+      }, {
+        question: "Teachers at school who saw me when I wasn’t on my best behavior might describe me as:",
+        options: ["a. Rowdy or a little wild.", "b. Arrogant.", "c. Talkative.", "d. Someone who wants things my way; dominant; worrying."]
+      }, {
+        question: "Teachers at school (who like me and in whose class I do pretty well) would probably describe me as:",
+        options: ["a. Charming, a natural leader, clever, someone who is fun to have around.", "b. Thoughtful, someone who has good answers, someone who likes to figure out problems.", "c. Nice, friendly, someone who gets along with other students and is helpful to the teacher and others.", "d. Neat, organized, prepared, someone who does assignments and is a good student."]
+      }, ];
+      // Dynamically create options for the first question
+      createOptions();
+      // Function to create options dynamically
+      function createOptions() {
+        var optionsContainer = document.getElementById("optionsContainer");
+        optionsContainer.innerHTML = ""; // Clear existing options
+        var options = questionsData[currentQuestion - 1].options;
+        options.forEach(function(option, index) {
+          var optionElement = document.createElement("p");
+          optionElement.innerHTML = `
+                    
+								<label class="questionFormat" for="question${currentQuestion + String.fromCharCode(97 + index)}">${option}</label>
+								<select id="question${currentQuestion + String.fromCharCode(97 + index)}" class="question" onchange="updateOptions(this.id)">
+									<option value="0"></option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+								</select>
+                `;
+          optionsContainer.appendChild(optionElement);
+        });
+        // Update the "Next" button to be initially disabled
+        var nextButton = document.getElementById('nextButton');
+        nextButton.disabled = true;
+        // Show/Hide buttons based on question number
+        if (currentQuestion < questionsData.length) {
+          nextButton.style.display = 'block';
+          document.getElementById('submitButton').style.display = 'none';
+        } else {
+          nextButton.style.display = 'none';
+          document.getElementById('submitButton').style.display = 'block';
+        }
+        updateQuestionTitle();
+      }
+      // Function to update question title dynamically
+      function updateQuestionTitle() {
+        document.getElementById("questionNumber").textContent = currentQuestion;
+        document.getElementById("questionText").textContent = questionsData[currentQuestion - 1].question;
+      }
+      // Function to jump to a specific question
+      function jumpToQuestion(questionNumber) {
+        currentQuestion = questionNumber;
+        createOptions();
+      }
+      // Function to update options based on user selection
+      function updateOptions(changedSelect) {
+        var selectedValue = changedSelect.value;
+        // enable the options in all select buttons
+        var allOptions = document.querySelectorAll('.question option');
+        allOptions.forEach(function(option) {
+          option.disabled = false;
+        });
+        // disable the option already selected
+        var allSelects = document.getElementsByClassName("question");
+        selectedNumbers = [];
+        for (var i = 0; i < allSelects.length; i++) {
+          if (allSelects[i] !== changedSelect) {
+            var selectedOption = allSelects[i].value;
+            selectedNumbers.push(selectedOption);
+          }
+        }
+        for (var i = 0; i < allSelects.length; i++) {
+          if (allSelects[i] !== changedSelect) {
+            var options = allSelects[i].options;
+            for (var j = 0; j < options.length; j++) {
+              if (selectedNumbers.includes(options[j].value)) {
+                options[j].disabled = true;
+              }
+            }
+          }
+        }
+        checkOptions();
+      }
+      // Dynamically create buttons for question navigation
+      createQuestionNavigationButtons();
+      // Function to create question navigation buttons dynamically
+      function createQuestionNavigationButtons() {
+        var questionNavigation = document.getElementById("questionNavigation");
+        questionNavigation.innerHTML = ""; // Clear existing buttons
+        for (var i = 1; i <= questionsData.length; i++) {
+          var button = document.createElement("button");
+          button.textContent = "Question " + i;
+          button.onclick = function() {
+            jumpToQuestion(parseInt(this.textContent.split(" ")[1]));
+          };
+          questionNavigation.appendChild(button);
+        }
+      }
+      // Function to check options and enable/disable the Next button
+      function checkOptions() {
+        answers = checkVal();
+        total = answers.reduce((sum, val) => sum + val, 0);
+        var nextButton = document.getElementById('nextButton');
+        if (total === 10 && allOptionsSelected()) {
+          nextButton.disabled = false;
+        } else {
+          nextButton.disabled = true;
+        }
+      }
+      // Function to check if all options for the current question are selected
+      function allOptionsSelected() {
+        var allSelects = document.getElementsByClassName("question");
+        for (var i = 0; i < allSelects.length; i++) {
+          if (allSelects[i].value === "0") {
+            return false;
+          }
+        }
+        return true;
+      }
+      // Function to extract selected values from options
+      function checkVal() {
+        var answers = [];
+        for (var i = 0; i < questionsData[currentQuestion - 1].options.length; i++) {
+          var optionId = "question" + currentQuestion + String.fromCharCode(97 + i);
+          var option = document.getElementById(optionId);
+          answers.push(parseInt(option.value, 10));
+        }
+        return answers;
+      }
+      // Function to handle form submission
+      function user_input() {
+            // Retrieve existing values from session storage
+            var my_dict = JSON.parse(sessionStorage.getItem('my_dict')) || {};
+
+            // Retrieve and store the answers for the current question
+            var answers = checkVal();
+            var questionKey = 'Q' + currentQuestion;
+            my_dict[questionKey] = answers;
+            sessionStorage.setItem('my_dict', JSON.stringify(my_dict));
+
+            // Check if it's the last question
+            if (currentQuestion < questionsData.length) {
+              currentQuestion++;
+              createOptions();
+            } else {
+              // Handle completion of all questions
+              console.log('All questions completed!');
+              // You can redirect to a final page or perform any other actions here
+            }
+
+            // Prevent form submission
+            return false;
+}
+
+      // Function to handle form submission and display results
+      function submitForm() {
+  // Check if all questions are answered
+  for (var i = 1; i <= questionsData.length; i++) {
+    if (!areAllOptionsAnswered(i)) {
+      alert('Please answer all questions before submitting.');
+      return false;
+    }
+  }
+
+  // Retrieve values from session storage (change from localStorage to sessionStorage)
+  var my_dict = JSON.parse(sessionStorage.getItem('my_dict'));
+
+  // Display results
+  displayResults();
+
+  // Prevent the default form submission
+  return false;
+}
+
+      // Function to check if all options for a specific question are selected
+      function areAllOptionsAnswered(questionNumber) {
+        var allSelects = document.querySelectorAll(`#optionsContainer select[id^="question${questionNumber}"]`);
+        for (var i = 0; i < allSelects.length; i++) {
+          if (allSelects[i].value === "0") {
+            return false;
+          }
+        }
+        return true;
+      }
+      function displayResults() {
+        console.log('Displaying results:', my_dict);
+  // Retrieve values from session storage
+  var my_dict = JSON.parse(sessionStorage.getItem('my_dict'));
+
+  // You can use the retrieved data to display results or perform any other actions
+  console.log('Results:', my_dict);
+
+  // For example, you can redirect to a results page
+  window.location.href = 'result_1.html';
+}
+
+    </script>
+  </body>
+</html>

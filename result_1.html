@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Test Results</title>
+    <link rel="stylesheet" type="text/css" href="result.css">
+    
+</head>
+<body id="results-bckg-result">
+  <div id="table-container">
+    <table id="resultTable">
+      <tr>
+          <th>Question Number</th>
+          <th>Option A</th>
+          <th>Option B</th>
+          <th>Option C</th>
+          <th>Option D</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td id="result1A"></td>
+        <td id="result1B"></td>
+        <td id="result1C"></td>
+        <td id="result1D"></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td id="result2A"></td>
+      <td id="result2B"></td>
+      <td id="result2C"></td>
+      <td id="result2D"></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td id="result3A"></td>
+        <td id="result3B"></td>
+        <td id="result3C"></td>
+        <td id="result3D"></td>
+    </tr>  
+    <tr>
+      <td>4</td>
+      <td id="result4A"></td>
+      <td id="result4B"></td>
+      <td id="result4C"></td>
+      <td id="result4D"></td>
+    </tr>  
+    <tr>
+      <td>5</td>
+      <td id="result5A"></td>
+      <td id="result5B"></td>
+      <td id="result5C"></td>
+      <td id="result5D"></td>
+    </tr> 
+    <tr>
+      <td>6</td>
+      <td id="result6A"></td>
+      <td id="result6B"></td>
+      <td id="result6C"></td>
+      <td id="result6D"></td>
+    </tr> 
+    <tr>
+      <td>7</td>
+      <td id="result7A"></td>
+      <td id="result7B"></td>
+      <td id="result7C"></td>
+      <td id="result7D"></td>
+    </tr> 
+    <tr>
+      <td>8</td>
+      <td id="result8A"></td>
+      <td id="result8B"></td>
+      <td id="result8C"></td>
+      <td id="result8D"></td>
+    </tr> 
+    <tr>
+      <td>9</td>
+      <td id="result9A"></td>
+      <td id="result9B"></td>
+      <td id="result9C"></td>
+      <td id="result9D"></td>
+    </tr> 
+    <tr>
+      <td>10</td>
+      <td id="result10A"></td>
+      <td id="result10B"></td>
+      <td id="result10C"></td>
+      <td id="result10D"></td>
+    </tr> 
+    <tr>
+      <td>11</td>
+      <td id="result11A"></td>
+      <td id="result11B"></td>
+      <td id="result11C"></td>
+      <td id="result11D"></td>
+    </tr>
+      <!-- Table rows for each question -->
+      <!-- ... -->
+      <tr id="totalRow">
+        <td>Total</td>
+        <td id="totalOptionA">0</td>
+        <td id="totalOptionB">0</td>
+        <td id="totalOptionC">0</td>
+        <td id="totalOptionD">0</td>
+      </tr>
+    </table>
+  </div>
+  <!-- Button to return to the main page -->
+  <button type="button" onclick="returnTohome()">Home</button>
+</div>
+
+  <!-- Display individual results and additional information -->
+  <div id="results-p">
+    <p id="equalMessage"></p>
+    <p>a. Orange: <span id="resultOrange"></span></p>
+    <p>b. Green: <span id="resultGreen"></span></p>
+    <p>c. Blue: <span id="resultBlue"></span></p>
+    <p>d. Gold: <span id="resultGold"></span></p>
+  
+    <br><br>
+    <!-- Display first and second colors along with user details -->
+    <p>What is your primary color?</p>
+    <span id="firstColorResult" class="legend"></span>
+    <br><br>
+    <p>What is your secondary color?</p>
+    <span id="secondColorResult" class="legend"></span>
+    <br><br>
+    <br>
+ 
+
+  
+    
+  <!-- JavaScript scripts -->
+  <script src="login.js"></script>
+  <script>
+    // Variables to store color results
+    var primaryColor;
+    var secondaryColor;
+
+    // Function to retrieve values from session storage and display in the table
+    function displayTestResults() {
+        // Retrieve values from session storage
+        var my_dict = JSON.parse(sessionStorage.getItem('my_dict'));
+
+        // Initialize variables to calculate totals
+        var totalOptionA = 0;
+        var totalOptionB = 0;
+        var totalOptionC = 0;
+        var totalOptionD = 0;
+
+        // Array to store totals for each color
+        var colorTotals = [
+            [totalOptionA, "Orange"],
+            [totalOptionB, "Green"],
+            [totalOptionC, "Blue"],
+            [totalOptionD, "gold"]
+        ];
+
+        // Loop through the dictionary to calculate totals
+        for (var questionKey in my_dict) {
+            var values = my_dict[questionKey];
+            totalOptionA += values[0];
+            totalOptionB += values[1];
+            totalOptionC += values[2];
+            totalOptionD += values[3];
+        }
+
+        // Display individual question results in the table
+        var options = ['A', 'B', 'C', 'D'];
+
+        for (var i = 1; i < 12; i++) {
+            var questionNumber = i;
+
+            for (var j = 0; j < 4; j++) {
+                var option = options[j];
+                var cellId = 'result' + questionNumber + option;
+                var cell = document.getElementById(cellId);
+                cell.innerText = my_dict['Q' + questionNumber][j];
+            }
+        }
+
+        // Set the text to display in the table
+        document.getElementById('totalOptionA').innerText = totalOptionA;
+        document.getElementById('totalOptionB').innerText = totalOptionB;
+        document.getElementById('totalOptionC').innerText = totalOptionC;
+        document.getElementById('totalOptionD').innerText = totalOptionD;
+
+        document.getElementById('resultOrange').innerText = totalOptionA;
+        document.getElementById('resultGreen').innerText = totalOptionB;
+        document.getElementById('resultBlue').innerText = totalOptionC;
+        document.getElementById('resultGold').innerText = totalOptionD;
+
+        // Find the primary and secondary colors
+        determinePrimaryAndSecondaryColors([totalOptionA, totalOptionB, totalOptionC, totalOptionD]);
+
+     
+        // Additional styling based on results
+        applyStyling([totalOptionA, totalOptionB, totalOptionC, totalOptionD]);
+    }
+
+    // Call the displayTestResults function when the page loads
+    window.onload = displayTestResults;
+
+    // Function to determine the primary and secondary colors
+    function determinePrimaryAndSecondaryColors(result) {
+        var resultArray = result.slice();
+        var resultOrder = result.slice();
+        var colorNames = ['Orange', 'Green', 'Blue', 'gold'];
+        var orderedColorNames = [];
+
+        resultOrder.sort(function (a, b) {
+            return b - a;
+        });
+
+        for (let i = 0; i < 4; i++) {
+            orderedColorNames.push(colorNames[resultArray.indexOf(resultOrder[i])]);
+        }
+
+        // Display the primary and secondary colors
+        document.getElementById("firstColorResult").innerText = orderedColorNames[0];
+        document.getElementById("secondColorResult").innerText = orderedColorNames[1];
+
+        // Update global variables
+        primaryColor = orderedColorNames[0];
+        secondaryColor = orderedColorNames[1];
+    }
+
+    // Event listener for the primary color button
+    const primaryColorBtn = document.getElementById('firstColorResult');
+    primaryColorBtn.addEventListener('click', () => {
+        const primarycolor = document.getElementById('display');
+        
+
+        
+        window.open(primaryColor + '.html');
+        
+    });
+
+    // Event listener for the secondary color button
+    const secondaryColorBtn = document.getElementById('secondColorResult');
+    secondaryColorBtn.addEventListener('click', () => {
+        const secondaryColor = document.getElementById('display');
+       
+
+        
+        window.open(secondaryColor + '.html');
+    });
+
+  
+
+    // Event listener to close the modal dialog
+    const closeDialogBtn = document.getElementById('closeDialogBtn');
+    closeDialogBtn.addEventListener('click', () => {
+        const dialog = document.getElementById('modal');
+        dialog.close();
+    });
+
+    // Additional styling based on results
+    function applyStyling(resultArray) {
+        var totals = resultArray.slice();
+        totals.sort(function (a, b) { return b - a; });
+
+        var firstHighest = totals[0];
+        var secondHighest = totals[1];
+        var thirdHighest = totals[2];
+
+        var firstElementId;
+        if (firstHighest == resultArray[0]) {
+            firstElementId = 'totalOptionA';
+        } else if (firstHighest == resultArray[1]) {
+            firstElementId = 'totalOptionB';
+        } else if (firstHighest == resultArray[2]) {
+            firstElementId = 'totalOptionC';
+        } else {
+            firstElementId = 'totalOptionD';
+        }
+
+        var secondElementId;
+        if (secondHighest == resultArray[0] && firstElementId !== 'totalOptionA') {
+            secondElementId = 'totalOptionA';
+        } else if (secondHighest == resultArray[1] && firstElementId !== 'totalOptionB') {
+            secondElementId = 'totalOptionB';
+        } else if (secondHighest == resultArray[2] && firstElementId !== 'totalOptionC') {
+            secondElementId = 'totalOptionC';
+        } else {
+            secondElementId = 'totalOptionD';
+        }
+
+        var thirdElementId;
+        if (thirdHighest == resultArray[0] && firstElementId !== 'totalOptionA' && secondElementId !== 'totalOptionA') {
+            thirdElementId = 'totalOptionA';
+        } else if (thirdHighest == resultArray[1] && firstElementId !== 'totalOptionB' && secondElementId !== 'totalOptionB') {
+            thirdElementId = 'totalOptionB';
+        } else if (thirdHighest == resultArray[2] && firstElementId !== 'totalOptionC' && secondElementId !== 'totalOptionC') {
+            thirdElementId = 'totalOptionC';
+        } else {
+            thirdElementId = 'totalOptionD';
+        }
+
+        var firstElement = document.getElementById(firstElementId);
+        var secondElement = document.getElementById(secondElementId);
+        var thirdElement = document.getElementById(thirdElementId);
+
+        if (firstHighest == secondHighest) {
+            if (thirdHighest == secondHighest) {
+                document.getElementById('equalMessage').innerHTML = "WE have three winners";
+                firstElement.style.backgroundColor = "gold";
+                firstElement.style.fontSize = "1.4em";
+                secondElement.style.backgroundColor = 'gold';
+                secondElement.style.fontSize = '1.4em';
+                thirdElement.style.backgroundColor = 'gold';
+                thirdElement.style.fontSize = '1.4em';
+            } else {
+                document.getElementById('equalMessage').innerHTML = "WE have two winners";
+                firstElement.style.backgroundColor = "gold";
+                firstElement.style.fontSize = "1.4em";
+                secondElement.style.backgroundColor = 'gold';
+                secondElement.style.fontSize = '1.4em';
+                thirdElement.style.backgroundColor = 'silver';
+                thirdElement.style.fontSize = '1.2em';
+            }
+        } else {
+            firstElement.style.backgroundColor = "gold";
+            firstElement.style.fontSize = "1.4em";
+            secondElement.style.backgroundColor = 'silver';
+            secondElement.style.fontSize = '1.2em';
+        }
+    }
+
+    // Function to return to the main page
+    function returnTohome() {
+        window.location.href = 'index.html';
+    }
+  </script>
+  <!-- Footer section with developer information -->
+  <footer id="footer">
+    <p >Made By  Sanjana Choudhary</p>
+  </footer>
+</body>
+</html>
